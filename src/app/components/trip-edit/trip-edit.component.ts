@@ -1,5 +1,8 @@
-import { Router } from '@angular/router';
-import { Trip } from './models/trip';
+import { City } from './../../models/city';
+import { Place } from './../../models/place';
+import { TripService } from './../../services/trips.service';
+import { Router, ActivatedRoute } from '@angular/router';
+import { Trip } from '../../models/trip';
 import { Observable } from 'rxjs/Observable';
 import { 
   Form, FormGroup, FormBuilder, 
@@ -8,19 +11,32 @@ import {
 import { Component, OnInit, EventEmitter } from '@angular/core';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  selector: 'trip-edit',
+  templateUrl: './trip-edit.component.html',
+  styleUrls: ['./trip-edit.component.css']
 })
-export class AppComponent {
+export class TripEditComponent {
+  trip: Trip;
   tripForm: FormGroup;
-  
-  constructor(private fb: FormBuilder) { }
+  editingStatus: boolean = false;
+
+  constructor(private fb: FormBuilder, 
+              private activatedRoute: ActivatedRoute,
+              private trips: TripService) {
+    if('id' in this.activatedRoute.snapshot.params) {
+      this.editingStatus = true;
+    }
+  }
 
   ngOnInit() {
     // Fetch the trip id if it is present then get the trip and pass it to
     // the initForm method.
-    // this.initForm() // handles both the create and edit logic
+    if (this.editingStatus) {
+      this.trip = this.trips.getTrip()
+      this.initForm(this.trip) // handles both the create and edit logic
+    } else {
+      this.initForm() // handles both the create and edit logic
+    }
   }
 
   /**
@@ -38,7 +54,13 @@ export class AppComponent {
    * @method initForm
    */
   initForm(trip?: Trip):void {
-    let name = 'Dubai Trip';
+    let name: string;
+    if(trip) {
+      name = trip.name;
+    } else {
+      name = '';
+    }
+    // let name = 'Dubai Trip';
     let cities: FormArray = new FormArray([]);
     let places: FormArray = new FormArray([]);
     
@@ -47,19 +69,18 @@ export class AppComponent {
       cities: cities
     })
     // Creating a new trip
-    this.addCity();
-    this.addPlace(0);
+    if(!trip) {
+      this.addCity();
+      this.addPlace(0);
+    } else {
     // Editing a trip 
-    // trip.cities.forEach((city, cityIndex) => {
-    //   this.addCity(city);
-    //   city.places.forEach((place, placeIndex) =>{
-    //     this.addPlace(cityIndex, place);
-    //     // NOTE: Pictures should be assigned here
-    //     // place.pictures.forEach(picture => {
-    //     //   this.addPicture(cityIndex, placeIndex, picture);
-    //     // })
-    //   })
-    // })
+      trip.cities.forEach((city, cityIndex) => {
+        this.addCity(city);
+        city.places.forEach((place, placeIndex) =>{
+          this.addPlace(cityIndex, place);
+        })
+      })
+    }
   }
 
   /**
@@ -68,12 +89,12 @@ export class AppComponent {
    * @param void
    * @return void
    */
-  addCity():void {
+  addCity(city?: City):void {
     let places = new FormArray([]);
-
+    let name = city ? city.name : '';
     (<FormArray>this.tripForm.controls['cities']).push(
       new FormGroup({
-        name: new FormControl('', Validators.required),
+        name: new FormControl(name, Validators.required),
         places: places
       })
     )
@@ -85,13 +106,13 @@ export class AppComponent {
    * @param {cityIndex} index of the city to which place is to be added
    * @return {void}
    */
-  addPlace(cityIndex: number):void {
-    let media: FormArray = new FormArray([]);
-
+  addPlace(cityIndex: number, place?: Place):void {
+    let name = place ? place.name : '';
+    
     (<FormArray>(<FormGroup>(<FormArray>this.tripForm.controls['cities'])
       .controls[cityIndex]).controls['places']).push(
         new FormGroup({
-          name: new FormControl('', Validators.required),
+          name: new FormControl(name, Validators.required),
         })
     )
   }
