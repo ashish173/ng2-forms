@@ -2,7 +2,7 @@
 
 This is a demo project repository for Angular Reactive forms blog.
 
-Concept for this form is directly picked from our [startup](http://yatrum.com). Code for it is also open source and can be found [here](https://github.com/aviabird.com/yatrum). Go ahead clone it and use it for your purpose in any way you want.
+Concept for this form is directly picked from our startup [Yatrum](http://yatrum.com) an application for travellers. Code for it is also open source and can be found [here](https://github.com/aviabird.com/yatrum). Go ahead clone it and use it for your purpose in any way you want.
 
 ## Development server
 Commands to run the example locally.
