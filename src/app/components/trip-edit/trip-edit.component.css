@@ -2,8 +2,16 @@
     padding: 2px;
     border: 1px solid darkkhaki;
     background: silver;
+    margin: 0 auto;
+    text-align: center;
+    /*width: 6rem;*/
 }
 .side {
+    display: inline-block;
+}
+
+.state-heading {
+    font-size: 21px;
     display: inline-block;
 }
 

@@ -64,8 +64,8 @@ export class TripEditComponent {
     let cities: FormArray = new FormArray([]);
     let places: FormArray = new FormArray([]);
     
-    this.tripForm = this.fb.group({
-      name: [name, Validators.required],
+    this.tripForm = new FormGroup({
+      name: new FormControl('', Validators.required), 
       cities: cities
     })
     // Creating a new trip

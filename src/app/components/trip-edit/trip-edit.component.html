@@ -5,10 +5,12 @@
 <div class="ui two column grid" style="margin-top:20px;">
   <div class="column create-form">
     <div class="banner" *ngIf="editingStatus">
-      <a href="" [routerLink]="['/trip', 'create']">Create Trip</a>          
+      <p class="state-heading"> Editing Trip </p>
+      <a href="" [routerLink]="['/trip', 'create']">Switch to create</a>          
     </div>
     <div class="banner" *ngIf="!editingStatus">
-      <a href="" [routerLink]="['/trip', 1, 'edit']">Edit Trip</a>    
+      <p class="state-heading"> Creating Trip </p>      
+      <a href="" [routerLink]="['/trip', 1, 'edit']">Switch to edit</a>    
     </div>
     
     <form class="ui form" [formGroup]="tripForm" (ngSubmit)="onSubmit()">
